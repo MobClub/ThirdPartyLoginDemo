@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="page_back">#fff2f2f2</color>
+    <color name="logo_text_color">#ff7f7f7f</color>
+    <color name="white">#ffffffff</color>
+    <color name="login_with_other_plat_text_color">#ff383838</color>
+</resources>

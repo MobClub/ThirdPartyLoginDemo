@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">ShareSDK第三方平台登录示例</string>
+    <integer name="app_version_code">2</integer>
+    <string name="app_version">2.0.0</string>
+    <string name="proj_name">ShareSDK_TPL</string>
+
+    <string name="share_sdk">Share SDK</string>
+    <string name="login_with_sina_weibo">用新浪微博登录</string>
+    <string name="login_with_qzone">用QQ空间登录</string>
+    <string name="login_with_other_plat">其他帐号登录</string>
+    <string name="facebook">Facebook</string>
+    <string name="twitter">Twitter</string>
+    
+    <string name="userid_found">用户信息已存在，正在跳转登录操作…</string>
+    <string name="logining">使用%s帐号登录中…</string>
+    <string name="auth_cancel">授权操作已取消</string>
+    <string name="auth_error">授权操作遇到错误，请阅读Logcat输出</string>
+    <string name="auth_complete">授权成功，正在跳转登录操作…</string>
+    <string name="if_register_needed">如果您需要注册功能…</string>
+    <string name="after_auth">一般来说第三方登录时，第三方平台已经为您完成用户身份校验，您可以放心让用户登录。\n\n但如果您需要判断用户是否为新用户，可以在授权操作完成后，将用户的信息通过字段“HashMap userInfo”携带给login方法。客户端通过“String userId”执行登录请求，如果服务端判定此userId为未注册用户，可以将userInfo发送给注册接口，获取用户在此平台上的昵称、头像等数据，然后执行注册</string>
+    <string name="ok">确定</string>
+</resources>
