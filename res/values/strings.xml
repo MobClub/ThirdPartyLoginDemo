@@ -8,8 +8,6 @@
     <string name="login_with_sina_weibo">用新浪微博登录</string>
     <string name="login_with_qzone">用QQ空间登录</string>
     <string name="login_with_other_plat">其他帐号登录</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
     
     <string name="userid_found">用户信息已存在，正在跳转登录操作…</string>
     <string name="logining">使用%s帐号登录中…</string>
