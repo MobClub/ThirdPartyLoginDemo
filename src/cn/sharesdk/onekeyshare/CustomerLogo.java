@@ -6,10 +6,7 @@
  * Copyright (c) 2013年 ShareSDK.cn. All rights reserved.
  */
 
-
 package cn.sharesdk.onekeyshare;
-
-import cn.sharesdk.demo.tpl.R;
 
 import android.graphics.Bitmap;
 import android.view.View.OnClickListener;

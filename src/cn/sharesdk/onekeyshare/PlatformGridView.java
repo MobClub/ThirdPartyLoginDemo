@@ -8,22 +8,20 @@
 
 package cn.sharesdk.onekeyshare;
 
-import cn.sharesdk.demo.tpl.R;
-
+import static cn.sharesdk.framework.utils.R.*;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import m.framework.ui.widget.viewpager.ViewPagerAdapter;
+import m.framework.ui.widget.viewpager.ViewPagerClassic;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Handler.Callback;
 import android.os.Message;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -34,18 +32,14 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cn.sharesdk.framework.CustomPlatform;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.framework.utils.UIHandler;
 
-/**
- * 平台宫格列表显示工具。
- * <p>
- * PlatformGridView对“android.support”包有依赖，因此请注意检查您项目中是
- *否已经集成了相应的jar包
- */
+/** 平台宫格列表显示工具。 */
 public class PlatformGridView extends LinearLayout implements
-		OnPageChangeListener, OnClickListener, Callback {
+		OnClickListener, Callback {
 	private static final int MSG_PLATFORM_LIST_GOT = 1;
 	// 每行显示的格数
 	private int LINE_PER_PAGE;
@@ -54,7 +48,7 @@ public class PlatformGridView extends LinearLayout implements
 	// 每页显示的格数
 	private int PAGE_SIZE;
 	// 宫格容器
-	private ViewPager pager;
+	private ViewPagerClassic pager;
 	// 页面指示器
 	private ImageView[] points;
 	private Bitmap grayPoint;
@@ -67,6 +61,8 @@ public class PlatformGridView extends LinearLayout implements
 	private HashMap<String, Object> reqData;
 	private OnekeyShare parent;
 	private ArrayList<CustomerLogo> customers;
+	private HashMap<String, String> hiddenPlatforms;
+	private View bgView;
 
 	public PlatformGridView(Context context) {
 		super(context);
@@ -82,16 +78,18 @@ public class PlatformGridView extends LinearLayout implements
 		calPageSize();
 		setOrientation(VERTICAL);
 
-		pager = new ViewPager(context);
+		pager = new ViewPagerClassic(context);
 		disableOverScrollMode(pager);
-		pager.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-		pager.setOnPageChangeListener(this);
+		pager.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		addView(pager);
 
 		// 为了更好的ui效果，开启子线程获取平台列表
 		new Thread(){
 			public void run() {
-				platformList = ShareSDK.getPlatformList(context);
+				platformList = ShareSDK.getPlatformList();
+				if (platformList == null) {
+					platformList = new Platform[0];
+				}
 				UIHandler.sendEmptyMessage(MSG_PLATFORM_LIST_GOT, PlatformGridView.this);
 			}
 		}.start();
@@ -140,6 +138,8 @@ public class PlatformGridView extends LinearLayout implements
 		if (platformList != null) {
 			int cusSize = customers == null ? 0 : customers.size();
 			int platSize = platformList == null ? 0 : platformList.length;
+			int hideSize = hiddenPlatforms == null ? 0 : hiddenPlatforms.size();
+			platSize = platSize-hideSize;
 			int size = platSize + cusSize;
 			pageCount = size / PAGE_SIZE;
 			if (size % PAGE_SIZE > 0) {
@@ -153,7 +153,7 @@ public class PlatformGridView extends LinearLayout implements
 
 		Context context = getContext();
 		LinearLayout llPoints = new LinearLayout(context);
-		// 如果页面总是超过1，则设置页面指示器
+		// 如果页面总数超过1，则设置页面指示器
 		llPoints.setVisibility(pageCount > 1 ? View.VISIBLE: View.GONE);
 		LayoutParams lpLl = new LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -162,8 +162,14 @@ public class PlatformGridView extends LinearLayout implements
 		addView(llPoints);
 
 		int dp_5 = cn.sharesdk.framework.utils.R.dipToPx(context, 5);
-		grayPoint = BitmapFactory.decodeResource(getResources(), R.drawable.gray_point);
-		whitePoint = BitmapFactory.decodeResource(getResources(), R.drawable.white_point);
+		int resId = getBitmapRes(getContext(), "gray_point");
+		if (resId > 0) {
+			grayPoint = BitmapFactory.decodeResource(getResources(), resId);
+		}
+		resId = getBitmapRes(getContext(), "white_point");
+		if (resId > 0) {
+			whitePoint = BitmapFactory.decodeResource(getResources(), resId);
+		}
 		for (int i = 0; i < pageCount; i++) {
 			points[i] = new ImageView(context);
 			points[i].setScaleType(ScaleType.CENTER_INSIDE);
@@ -173,61 +179,38 @@ public class PlatformGridView extends LinearLayout implements
 			points[i].setLayoutParams(lpIv);
 			llPoints.addView(points[i]);
 		}
-		int curPage = pager.getCurrentItem();
+		int curPage = pager.getCurrentScreen();
 		points[curPage].setImageBitmap(whitePoint);
 	}
 
 	/** 屏幕旋转后，此方法会被调用，以刷新宫格列表的布局 */
 	public void onConfigurationChanged() {
-		int curFirst = pager.getCurrentItem() * PAGE_SIZE;
+		int curFirst = pager.getCurrentScreen() * PAGE_SIZE;
 		calPageSize();
 		int newPage = curFirst / PAGE_SIZE;
 
 		removeViewAt(1);
 		afterPlatformListGot();
-		ViewGroup.LayoutParams lp = pager.getLayoutParams();
-		View v = pager.getChildAt(0);
-		v.measure(0, 0);
-		lp.height = v.getMeasuredHeight();
-		pager.setLayoutParams(lp);
 
-		pager.setCurrentItem(newPage);
+		pager.setCurrentScreen(newPage);
 	}
 
-	public void onPageScrollStateChanged(int state) {
-		if (ViewPager.SCROLL_STATE_IDLE == state) {
-			for (int i = 0; i < points.length; i++) {
-				points[i].setImageBitmap(grayPoint);
-			}
-
-			int curPage = pager.getCurrentItem();
-			points[curPage].setImageBitmap(whitePoint);
-		}
-	}
-
-	public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-	}
-
-	public void onPageSelected(int position) {
-
-	}
-
-	/**
-	 * 设置页面初始化和分享操作需要的数据
-	 * <p>
-	 * 此方法在{@link OnekeyShare}的UI初始化中被调用
-	 *
-	 * @param intent 携带初始化数据的Intent
-	 */
 	public void setData(HashMap<String, Object> data, boolean silent) {
 		reqData = data;
 		this.silent = silent;
 	}
 
-	/** 设置自己图标和点击事件 */
+	public void setHiddenPlatforms(HashMap<String, String> hiddenPlatforms) {
+		this.hiddenPlatforms = hiddenPlatforms;
+	}
+
+	/** 设置自己图标的点击事件 */
 	public void setCustomerLogos(ArrayList<CustomerLogo> customers) {
 		this.customers = customers;
+	}
+
+	public void setEditPageBackground(View bgView) {
+		this.bgView = bgView;
 	}
 
 	/** 设置分享操作的回调页面 */
@@ -247,9 +230,10 @@ public class PlatformGridView extends LinearLayout implements
 			}
 
 			String name = plat.getName();
-			parent.setPlatform(name);
+			reqData.put("platform", name);
 			// EditPage不支持微信平台、Google+、QQ分享、Pinterest、信息和邮件，总是执行直接分享
-			if (ShareCore.isUseClientToShare(getContext(), name)) {
+			if ((plat instanceof CustomPlatform)
+					|| ShareCore.isUseClientToShare(name)) {
 				HashMap<Platform, HashMap<String, Object>> shareData
 						= new HashMap<Platform, HashMap<String,Object>>();
 				shareData.put(plat, reqData);
@@ -259,6 +243,8 @@ public class PlatformGridView extends LinearLayout implements
 
 			// 跳转EditPage分享
 			EditPage page = new EditPage();
+			page.setBackGround(bgView);
+			bgView = null;
 			page.setShareData(reqData);
 			page.setParent(parent);
 			if ("true".equals(String.valueOf(reqData.get("dialogMode")))) {
@@ -269,7 +255,7 @@ public class PlatformGridView extends LinearLayout implements
 		}
 	}
 
-	// 禁用ViewPage OverScroll的“发光”效果
+	// 禁用页面滚动的“发光”效果
 	private void disableOverScrollMode(View view) {
 		if (Build.VERSION.SDK_INT < 9) {
 			return;
@@ -285,12 +271,10 @@ public class PlatformGridView extends LinearLayout implements
 	}
 
 	/** 宫格列表数据适配器 */
-	private static class PlatformAdapter extends PagerAdapter {
-		// 宫格列表元素
+	private static class PlatformAdapter extends ViewPagerAdapter {
 		private GridView[] girds;
 		private List<Object> logos;
 		private OnClickListener callback;
-		// 行数
 		private int lines;
 		private PlatformGridView platformGridView;
 
@@ -298,7 +282,23 @@ public class PlatformGridView extends LinearLayout implements
 			this.platformGridView = platformGridView;
 			logos = new ArrayList<Object>();
 			Platform[] platforms = platformGridView.platformList;
+			HashMap<String, String> hiddenPlatforms = platformGridView.hiddenPlatforms;
 			if (platforms != null) {
+				if (hiddenPlatforms != null && hiddenPlatforms.size() > 0) {
+					ArrayList<Platform> ps = new ArrayList<Platform>();
+					for (Platform p : platforms) {
+						if (hiddenPlatforms.containsKey(p.getName())) {
+							continue;
+						}
+						ps.add(p);
+					}
+
+					platforms = new Platform[ps.size()];
+					for (int i = 0; i < platforms.length; i++) {
+						platforms[i] = ps.get(i);
+					}
+				}
+
 				logos.addAll(Arrays.asList(platforms));
 			}
 			ArrayList<CustomerLogo> customers = platformGridView.customers;
@@ -323,11 +323,7 @@ public class PlatformGridView extends LinearLayout implements
 			return girds == null ? 0 : girds.length;
 		}
 
-		public boolean isViewFromObject(View view, Object obj) {
-			return view == obj;
-		}
-
-		public Object instantiateItem(ViewGroup container, int position) {
+		public View getView(int position, ViewGroup parent) {
 			if (girds[position] == null) {
 				int pageSize = platformGridView.PAGE_SIZE;
 				int curSize = pageSize * position;
@@ -351,20 +347,17 @@ public class PlatformGridView extends LinearLayout implements
 				girds[position].setData(lines, gridBean);
 			}
 
-			if (position == 0) {
-				ViewGroup.LayoutParams lp = container.getLayoutParams();
-				if (lp.height <= 0) {
-					girds[position].measure(0, 0);
-					lp.height = girds[position].getMeasuredHeight();
-					container.setLayoutParams(lp);
-				}
-			}
-			container.addView(girds[position]);
 			return girds[position];
 		}
 
-		public void destroyItem(ViewGroup container, int position, Object object) {
-			container.removeView((View) object);
+		/** 屏幕滑动后，此方法会被调用 */
+		public void onScreenChange(int currentScreen, int lastScreen) {
+			ImageView[] points = platformGridView.points;
+			for (int i = 0; i < points.length; i++) {
+				points[i].setImageBitmap(platformGridView.grayPoint);
+			}
+
+			points[currentScreen].setImageBitmap(platformGridView.whitePoint);
 		}
 
 	}
@@ -400,7 +393,7 @@ public class PlatformGridView extends LinearLayout implements
 				lineSize++;
 			}
 			LayoutParams lp = new LayoutParams(
-					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 			lp.weight = 1;
 			for (int i = 0; i < lines; i++) {
 				LinearLayout llLine = new LinearLayout(getContext());
@@ -437,8 +430,7 @@ public class PlatformGridView extends LinearLayout implements
 				logo = getIcon((Platform) beans[position]);
 				label = getName((Platform) beans[position]);
 				listener = ocL;
-			}
-			else {
+			} else {
 				logo = ((CustomerLogo) beans[position]).logo;
 				label = ((CustomerLogo) beans[position]).label;
 				listener = ((CustomerLogo) beans[position]).listener;
@@ -463,10 +455,10 @@ public class PlatformGridView extends LinearLayout implements
 			tv.setTextColor(0xffffffff);
 			tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
 			tv.setSingleLine();
-			tv.setGravity(Gravity.CENTER_HORIZONTAL);
 			tv.setIncludeFontPadding(false);
 			LinearLayout.LayoutParams lpTv = new LinearLayout.LayoutParams(
-					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			lpTv.gravity = Gravity.CENTER_HORIZONTAL;
 			lpTv.weight = 1;
 			lpTv.setMargins(dp_5, 0, dp_5, dp_5);
 			tv.setLayoutParams(lpTv);
@@ -488,7 +480,7 @@ public class PlatformGridView extends LinearLayout implements
 			}
 
 			String resName = "logo_" + plat.getName();
-			int resId = cn.sharesdk.framework.utils.R.getResId(R.drawable.class, resName);
+			int resId = getBitmapRes(getContext(), resName);
 			return BitmapFactory.decodeResource(getResources(), resId);
 		}
 
@@ -503,7 +495,10 @@ public class PlatformGridView extends LinearLayout implements
 			}
 
 			int resId = cn.sharesdk.framework.utils.R.getStringRes(getContext(), plat.getName());
-			return getContext().getString(resId);
+			if (resId > 0) {
+				return getContext().getString(resId);
+			}
+			return null;
 		}
 
 	}
