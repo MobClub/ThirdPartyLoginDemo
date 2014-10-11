@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/dialog_camera"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="15dip"
+        android:paddingTop="15dip"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:text="@string/tpl_camera"
+        android:textColor="#ff353535"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:background="#ffd6d6d6" />
+
+    <TextView
+        android:id="@+id/dialog_picture"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="15dip"
+        android:paddingTop="15dip"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:text="@string/tpl_picture"
+        android:textColor="#ff353535"
+        android:textSize="15sp" />
+
+</LinearLayout>

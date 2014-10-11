@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="20dp"
+    android:background="@color/page_back"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_marginRight="10dp"
+        android:drawablePadding="10dp"
+        android:textColor="@color/logo_text_color"
+        android:gravity="center_horizontal"
+        android:drawableTop="@drawable/logo_facebook"
+        android:id="@+id/tvFacebook"
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/facebook" />
+
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:drawablePadding="10dp"
+        android:textColor="@color/logo_text_color"
+        android:gravity="center_horizontal"
+        android:drawableTop="@drawable/logo_twitter"
+        android:id="@+id/tvTwitter"
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/twitter" />
+
+</LinearLayout>

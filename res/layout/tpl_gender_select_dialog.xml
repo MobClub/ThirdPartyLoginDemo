@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/dialog_tv_title"
+        android:layout_width="fill_parent"
+        android:layout_height="60dip"
+        android:gravity="center_vertical"
+        android:padding="10dip"
+        android:text="@string/tpl_key_user_gender"
+        android:textColor="#ff3cac17"
+        android:textSize="18sp"
+        android:textStyle="bold" 
+        android:visibility="gone"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="#ffbcbcbc" 
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_boy"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dip"
+        android:layout_marginTop="15dip"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip" >
+
+        <TextView
+            android:id="@+id/dialog_tv_boy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/tpl_boy"
+            android:textColor="#ff353535"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/dialog_iv_boy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/checked" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:background="#ffd6d6d6" />
+
+    <RelativeLayout
+        android:id="@+id/rl_girl"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dip"
+        android:layout_marginTop="15dip"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip" >
+
+        <TextView
+            android:id="@+id/dialog_tv_girl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/tpl_girl"
+            android:textColor="#ff353535"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/dialog_iv_girl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/checked"
+            android:visibility="gone"  />
+    </RelativeLayout>
+
+</LinearLayout>

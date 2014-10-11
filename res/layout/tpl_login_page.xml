@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/page_back"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="60dp"
+                android:drawableLeft="@drawable/ic_launcher"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/share_sdk"
+                android:textColor="@color/logo_text_color"
+                android:textSize="48dp"
+                android:singleLine="true"
+                android:textStyle="bold" />
+ 			
+ 			<TextView
+                android:id="@+id/tvMsgRegister"
+                android:singleLine="true"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/msg_login"
+                android:gravity="center"
+                android:text="@string/login_with_msg"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+  			
+  			<TextView
+                android:id="@+id/tvWeixin"
+                android:singleLine="true"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/wechat_login"
+                android:gravity="center"
+                android:text="@string/login_with_weixin"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+  
+            <TextView
+                android:id="@+id/tvWeibo"
+                android:singleLine="true"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/weibo_login"
+                android:gravity="center"
+                android:text="@string/login_with_sina_weibo"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/tvQq"
+                android:singleLine="true"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/qq_login"
+                android:gravity="center"
+                android:text="@string/login_with_qzone"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/tvOther"
+                android:singleLine="true"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/other_login"
+                android:gravity="center"
+                android:text="@string/login_with_other_plat"
+                android:textColor="@color/login_with_other_plat_text_color"
+                android:textSize="18dp" />
+            
+        </LinearLayout>
+        
+    </ScrollView>
+
+</RelativeLayout>
