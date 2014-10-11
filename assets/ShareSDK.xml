@@ -34,6 +34,7 @@
 			搜狐微博                 http://open.t.sohu.com
 			网易微博                 http://open.t.163.com
 			豆瓣                           http://developers.douban.com
+			
 			有道云笔记            http://note.youdao.com/open/developguide.html#app
 			印象笔记                 https://dev.evernote.com/
 			Linkedin      https://www.linkedin.com/secure/developer?newapp=
@@ -45,10 +46,13 @@
 			Dropbox       https://www.dropbox.com/developers
 			Instagram     http://instagram.com/developer#
 			VKontakte     http://vk.com/dev
+			易信好友          	http://open.yixin.im/
+			明道	    http://open.mingdao.com/
+			Line	http://media.line.me/zh-hant/
     -->
     
     <ShareSDK 
-        AppKey = "androidv1101"/> <!-- 修改成你在sharesdk后台注册的应用的appkey"-->
+        AppKey = "330bf065e354"/> <!-- 修改成你在sharesdk后台注册的应用的appkey"-->
     
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
     <SinaWeibo
@@ -57,7 +61,7 @@
         AppKey="568898243"
         AppSecret="38a4f8204cc784f81f9f0daaf31e02e3"
         RedirectUrl="http://www.sharesdk.cn"
-        ShareByAppClient="true"
+        ShareByAppClient="false"
         Enable="true" />
 
     <TencentWeibo
@@ -92,28 +96,33 @@
     <Wechat
         Id="4"
         SortId="4"
-        AppId="wx4868b35061f87885"
-        BypassApproval="true"
+        AppId="wxc43c2c004120810f"
+        AppSecret="96306e148dc901d44fedb897566f7a6d"
+        BypassApproval="false"
         Enable="true" />
     
     <WechatMoments
         Id="5"
         SortId="5"
-        AppId="wx4868b35061f87885"
+        AppId="wxc43c2c004120810f"
+        AppSecret="96306e148dc901d44fedb897566f7a6d"
         BypassApproval="true"
         Enable="true" />
         
 	<WechatFavorite
         Id="6"
         SortId="6"
-        AppId="wx4868b35061f87885"
+        AppId="wxc43c2c004120810f"
+        AppSecret="96306e148dc901d44fedb897566f7a6d"
         Enable="true" />
     
+	<!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
 	<QQ
         Id="7"
         SortId="7"
         AppId="100371282"
         AppKey="aed9b0303e3ed1e27bae87c33761161d"
+        ShareByAppClient="true"
         Enable="true" />
     
     <Facebook
@@ -314,6 +323,21 @@
         AppKey="EEEE9578D1D431D3215D8C21BF5357E3"
         AppSecret="5EDE59F37B3EFA8F65EEFB9976A4E933"
         RedirectUri="http://sharesdk.cn"
+        Enable="true" />
+	
+	<Line
+	    Id="32"
+        SortId="32"
+        Enable="true" />
+	
+	<KakaoTalk
+	    Id="33"
+        SortId="33"
+        Enable="true" />
+	
+	<KakaoStory
+	    Id="34"
+        SortId="34"
         Enable="true" />
 	
 </DevInfor>

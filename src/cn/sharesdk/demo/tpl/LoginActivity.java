@@ -12,14 +12,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Toast;
-import cn.sharesdk.facebook.Facebook;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.framework.utils.UIHandler;
-import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qzone.QZone;
-import cn.sharesdk.twitter.Twitter;
+import cn.sharesdk.wechat.friends.Wechat;
+
 
 /** 中文注释
  * ShareSDK 官网地址 ： http://www.sharesdk.cn </br>
@@ -48,9 +47,8 @@ public class LoginActivity extends Activity implements Callback,
 		ShareSDK.initSDK(this);
 		
 		setContentView(R.layout.third_party_login_page);
-		findViewById(R.id.tvWeibo).setOnClickListener(this);
+		findViewById(R.id.wechat).setOnClickListener(this);
 		findViewById(R.id.tvQq).setOnClickListener(this);
-		findViewById(R.id.tvOther).setOnClickListener(this);
 	}
 	
 	protected void onDestroy() {
@@ -60,39 +58,18 @@ public class LoginActivity extends Activity implements Callback,
 	
 	public void onClick(View v) {
 		switch(v.getId()) {
-			case R.id.tvWeibo: {
-				authorize(new SinaWeibo(this));
+			case R.id.wechat: {
+				authorize(new Wechat(this));
 			}
 			break;
 			case R.id.tvQq: {
 				authorize(new QZone(this));
 			}
 			break;
-			case R.id.tvOther: {
-				authorize(null);
-			}
-			break;
-			case R.id.tvFacebook: {
-				Dialog dlg = (Dialog) v.getTag();
-				dlg.dismiss();
-				authorize(new Facebook(this));
-			}
-			break;
-			case R.id.tvTwitter: {
-				Dialog dlg = (Dialog) v.getTag();
-				dlg.dismiss();
-				authorize(new Twitter(this));
-			}
-			break;
 		}
 	}
 	
-	private void authorize(Platform plat) {
-		if (plat == null) {
-			popupOthers();
-			return;
-		}
-		
+	private void authorize(Platform plat) {	
 		if(plat.isValid()) {
 			String userId = plat.getDb().getUserId();
 			if (!TextUtils.isEmpty(userId)) {
@@ -106,21 +83,6 @@ public class LoginActivity extends Activity implements Callback,
 		plat.showUser(null);
 	}
 	
-	private void popupOthers() {
-		Dialog dlg = new Dialog(this);
-		View dlgView = View.inflate(this, R.layout.other_plat_dialog, null);
-		View tvFacebook = dlgView.findViewById(R.id.tvFacebook);
-		tvFacebook.setTag(dlg);
-		tvFacebook.setOnClickListener(this);
-		View tvTwitter = dlgView.findViewById(R.id.tvTwitter);
-		tvTwitter.setTag(dlg);
-		tvTwitter.setOnClickListener(this);
-		
-		dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		dlg.setContentView(dlgView);
-		dlg.show();
-	}
-	
 	public void onComplete(Platform platform, int action,
 			HashMap<String, Object> res) {
 		if (action == Platform.ACTION_USER_INFOR) {
@@ -128,6 +90,8 @@ public class LoginActivity extends Activity implements Callback,
 			login(platform.getName(), platform.getDb().getUserId(), res);
 		}
 		System.out.println(res);
+		System.out.println("------User Name ---------" + platform.getDb().getUserName());
+		System.out.println("------User ID ---------" + platform.getDb().getUserId());
 	}
 	
 	public void onError(Platform platform, int action, Throwable t) {
@@ -160,6 +124,7 @@ public class LoginActivity extends Activity implements Callback,
 				
 				String text = getString(R.string.logining, msg.obj);
 				Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+				System.out.println("---------------");
 				
 //				Builder builder = new Builder(this);
 //				builder.setTitle(R.string.if_register_needed);
@@ -170,14 +135,17 @@ public class LoginActivity extends Activity implements Callback,
 			break;
 			case MSG_AUTH_CANCEL: {
 				Toast.makeText(this, R.string.auth_cancel, Toast.LENGTH_SHORT).show();
+				System.out.println("-------MSG_AUTH_CANCEL--------");
 			}
 			break;
 			case MSG_AUTH_ERROR: {
 				Toast.makeText(this, R.string.auth_error, Toast.LENGTH_SHORT).show();
+				System.out.println("-------MSG_AUTH_ERROR--------");
 			}
 			break;
 			case MSG_AUTH_COMPLETE: {
 				Toast.makeText(this, R.string.auth_complete, Toast.LENGTH_SHORT).show();
+				System.out.println("--------MSG_AUTH_COMPLETE-------");
 			}
 			break;
 		}

@@ -5,7 +5,7 @@
     <string name="proj_name">ShareSDK_TPL</string>
 
     <string name="share_sdk">Share SDK</string>
-    <string name="login_with_sina_weibo">用新浪微博登录</string>
+    <string name="login_with_wechat">用微信登录</string>
     <string name="login_with_qzone">用QQ空间登录</string>
     <string name="login_with_other_plat">其他帐号登录</string>
     
