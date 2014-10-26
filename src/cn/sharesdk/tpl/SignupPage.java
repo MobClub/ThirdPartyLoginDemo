@@ -5,9 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-
 import android.app.Activity;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -20,7 +18,6 @@ import android.os.Environment;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.text.Layout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.sharesdk.demo.tpl.R;
 import cn.sharesdk.framework.FakeActivity;
 import cn.sharesdk.framework.Platform;
@@ -54,12 +52,18 @@ public class SignupPage extends FakeActivity implements OnClickListener, Callbac
 	/**图片名字*/
 	private static final String PICTURE_NAME = "userIcon.jpg";
 	
+	private OnLoginListener signupListener;
 	private ImageView ivUserIcon;
 	private TextView tvUserName, tvUserGender, tvUserNote, tvEnsure;
 	private Platform platform;
 	
 	private String picturePath;
 	private UserInfo userInfo = new UserInfo();
+	
+	/** 设置授权回调，用于判断是否进入注册 */
+	public void setOnLoginListener(OnLoginListener l) {
+		this.signupListener = l;
+	}
 	
 	@Override
 	public void onCreate() {
@@ -82,8 +86,7 @@ public class SignupPage extends FakeActivity implements OnClickListener, Callbac
 		initData();		
 	}
 
-	public void setPlatform(int platformID) {
-		String platName = ShareSDK.platformIdToName(platformID);
+	public void setPlatform(String platName) {
 		platform = ShareSDK.getPlatform(platName);
 	}
 	
@@ -176,14 +179,15 @@ public class SignupPage extends FakeActivity implements OnClickListener, Callbac
 			ivUserIcon.setImageURI(Uri.parse(picturePath));
 			break;
 		case MSG_SHOW_TOAST:
-			// 执行注册
-			AuthManager.doSignup(platform);
-			// 注册提示
-			Builder builder = new Builder(activity);
-			builder.setTitle(R.string.if_register_needed);
-			builder.setMessage(R.string.after_auth);
-			builder.setPositiveButton(R.string.tpl_ok, null);
-			builder.create().show();
+			if (signupListener != null) {
+				// 执行注册
+				if (signupListener.onSignUp(userInfo) ) {
+					Toast.makeText(activity, R.string.signup_success, Toast.LENGTH_SHORT).show();
+					finish();
+				} else {
+					Toast.makeText(activity, R.string.signup_failed, Toast.LENGTH_SHORT).show();
+				}
+			}
 			break;
 		default:
 			break;
