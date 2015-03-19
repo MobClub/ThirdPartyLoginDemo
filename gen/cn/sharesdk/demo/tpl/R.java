@@ -138,6 +138,8 @@ public final class R {
         public static final int share_to_qzone=0x7f05002a;
         public static final int share_to_qzone_default=0x7f05002e;
         public static final int shortmessage=0x7f050015;
+        public static final int signup_failed=0x7f050059;
+        public static final int signup_success=0x7f050058;
         public static final int sinaweibo=0x7f05000a;
         public static final int sohumicroblog=0x7f050016;
         public static final int sohusuishenkan=0x7f050017;

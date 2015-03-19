@@ -50,5 +50,7 @@
     <string name="tpl_verify_code_hint">请输验证码</string>
     <string name="tpl_get_verify_code">获取验证码</string>
     <string name="tpl_send_verify_code">检验验证码</string>
+    <string name="signup_success">注册成功</string>
+    <string name="signup_failed">注册失败</string>
 
 </resources>
